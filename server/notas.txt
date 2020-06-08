@@ -1,0 +1,66 @@
+//Request Param : Parâmetro que vem na própria rota que identifique
+//Query Param: Parâmetro que vem na própira rota geralmente opcionarl para filtrs, paginação
+//Request Body: Parâmetro para criação/atualizção de informações
+
+//Array users
+
+const users = [
+    'Diego',
+    'Cleiton',
+    'Robson',
+    'TESTE'
+];
+
+
+
+// Listar todos usuários - server.ts line 14
+app.get('/users', (request, response) => {
+    //console.log('Listagem de Usuários');
+    const search = String(request.query.search);
+
+    const filteredUsers = search ? users.filter(user => user.includes(search)) : users;
+
+    console.log(search); 
+    return response.json(filteredUsers);  
+});
+// Listar um único usuário - server.ts line 16
+app.get('/users/:id', (request, response) => {
+    const id = Number(request.params.id);
+
+    const user = users[id];
+
+    return response.json(user); 
+})
+// Criar usuário - server.ts line 34
+app.post('/users', (request, response) => {
+    const data = request.body;
+
+    const user = {
+            name: data.name,
+            email: data.email,
+        };
+
+   return response.json(user);
+})
+
+
+// Migrations histórico do banco de dados
+up - criação da tabela
+
+down - deletar tabela
+
+
+// Controller
+
+index - listagem
+show - unico registro
+create
+update
+delete
+
+
+
+
+
+
+

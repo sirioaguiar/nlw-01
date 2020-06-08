@@ -1,0 +1,3 @@
+Ler e aplicar 
+Service Pattern
+Repository Pattern - Data Mapper
