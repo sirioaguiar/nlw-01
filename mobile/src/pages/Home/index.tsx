@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Feather as Icon } from '@expo/vector-icons';
 import { View, ImageBackground, Image, StyleSheet, TextInput, Text } from 'react-native';
 import { RectButton } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
 import RNPickerSelect from 'react-native-picker-select';
+import axios from 'axios';
+
 
 interface IBGEUFResponse{
   sigla:string;
@@ -15,17 +17,65 @@ interface IBGECityResponse{
 
 const Home = () => {
 
-  
-  const [uf, setUf] = useState('') ;
-  const [city, setCity] = useState('') ;
+  const [ufs, setUfs] = useState<string[]>([]);
+  const [cities, setCities] = useState<string[]>([]);
 
+  
+  const [selectedUf, setSelectedUf] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
 
   const navigation = useNavigation();
 
+  const placeholderUF = {
+    label: 'Selecione uma UF...',
+    value: null,
+    color: '#9EA0A4',
+  };
+  
+  const placeholderCity = {
+    label: 'Selecione uma Cidade...',
+    value: null,
+    color: '#9EA0A4',
+  };
+
+  //UF
+  useEffect(() => {
+    axios.get<IBGEUFResponse[]>('https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome')
+    .then(response => {
+    const ufName = response.data.map(uf => uf.sigla);
+    setUfs(ufName);
+    });
+  },[]);
+
+//Cidades
+  useEffect(() => {
+    if(selectedUf === '0') {
+        return;
+    }
+    axios.get<IBGECityResponse[]>(`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${selectedUf}/municipios`)
+    .then(response => {
+    const cityNames = response.data.map(city => city.nome);
+    setCities(cityNames);
+    });
+  },[selectedUf]);
+
+//Handle select UF
+  function handleSelectUf(value: string){
+    const uf =  value;
+    setSelectedUf(uf);
+    console.log(uf);
+  }
+//Handle select Cidade
+  function handleSelectCity(value: string){
+  const city =  value;
+  setSelectedCity(city);
+  console.log(city);
+}
+
   function handleNavigateToPoints(){
     navigation.navigate('Points', {
-      uf, 
-      city,
+      selectedUf,
+      selectedCity
     });
   };
 
@@ -50,34 +100,29 @@ const Home = () => {
               </View>
             </View>
             <View>
-              <RectButton style={styles.button} onPress={ handleNavigateToTest }>
-                    <View style={styles.buttonIcon}>
-                        <Text>
-                            <Icon name="arrow-right" color="#FFF" size={24} />
-                        </Text>
-            </View>
-                        <Text style={styles.buttonText}>
-                            Teste
-                        </Text>                    
-                </RectButton>
+ 
             </View>
             <View style={styles.footer}>
-                <TextInput
-                  style={styles.input} 
-                  placeholder='Digite a UF'
-                  maxLength={2}
-                  autoCapitalize='characters'
-                  autoCorrect={false}
-                  value={uf}
-                  onChangeText={setUf}
-                />
-                <TextInput
-                  style={styles.input}
-                  placeholder='Digite a Cidade'
-                  value={city}
-                  autoCorrect={false}
-                  onChangeText={setCity}
-                />
+            <RNPickerSelect
+             placeholder={placeholderUF}
+              onValueChange={(value) => handleSelectUf(value)}
+              items={
+                ufs.map(uf => (
+                  {label: uf, value: uf}
+                ))
+              }
+              
+            />
+              <RNPickerSelect
+              placeholder={placeholderCity}
+              onValueChange={(value) => handleSelectCity(value)}
+            
+              items={
+                cities.map(city => (
+                  {label: city, value: city}
+                ))
+              }
+            />
                 <RectButton style={styles.button} onPress={ handleNavigateToPoints }>
                     <View style={styles.buttonIcon}>
                         <Text>
