@@ -14,11 +14,15 @@ Projeto em Typescript desenvolvido com React e ReactNative durante a NLW #01 da 
 ## Mobile
 ### Home
 <img src="https://github.com/sirioaguiar/nlw-01/blob/master/mobile/prints/home.jpeg" height="400" width="200">
+
 ### Picker
 <img src="https://github.com/sirioaguiar/nlw-01/blob/master/mobile/prints/home_select.jpeg" height="400" width="200">
+
 ### Ponto
 <img src="https://github.com/sirioaguiar/nlw-01/blob/master/mobile/prints/points.jpeg" height="400" width="200">
+
 ### Detalhe
 <img src="https://github.com/sirioaguiar/nlw-01/blob/master/mobile/prints/Detail.jpeg" height="400" width="200">
+
 ### Email Action
 <img src="https://github.com/sirioaguiar/nlw-01/blob/master/mobile/prints/email.jpeg" height="400" width="200">
